@@ -19,7 +19,15 @@ const config = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    expandParent: true,
   },
 };
 
 const game = new Phaser.Game(config);
+
+const refreshScale = () => {
+  game.scale.refresh();
+};
+
+window.addEventListener("resize", refreshScale);
+window.addEventListener("orientationchange", refreshScale);

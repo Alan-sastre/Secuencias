@@ -22,10 +22,19 @@ export default class Puzzle4Scene extends Phaser.Scene {
     this.createBackgroundAnimations();
     this.drawSequenceTrack();
     this.createPieces();
-    this.hand = this.add.text(0, 0, "👆🏻", { fontSize: "60px" }).setOrigin(0.5).setDepth(40);
-    this.input.on("dragstart", (pointer, gameObject) => this.onDragStart(gameObject));
-    this.input.on("drag", (pointer, gameObject, dragX, dragY) => this.onDrag(gameObject, dragX, dragY));
-    this.input.on("dragend", (pointer, gameObject) => this.onDragEnd(gameObject));
+    this.hand = this.add
+      .text(0, 0, "👆🏻", { fontSize: "60px" })
+      .setOrigin(0.5)
+      .setDepth(40);
+    this.input.on("dragstart", (pointer, gameObject) =>
+      this.onDragStart(gameObject),
+    );
+    this.input.on("drag", (pointer, gameObject, dragX, dragY) =>
+      this.onDrag(gameObject, dragX, dragY),
+    );
+    this.input.on("dragend", (pointer, gameObject) =>
+      this.onDragEnd(gameObject),
+    );
     this.updateHelp();
   }
 
@@ -40,7 +49,12 @@ export default class Puzzle4Scene extends Phaser.Scene {
 
   createBackgroundAnimations() {
     for (let i = 0; i < 4; i += 1) {
-      const cloud = this.add.container(Phaser.Math.Between(-200, 1000), Phaser.Math.Between(48, 150)).setDepth(3);
+      const cloud = this.add
+        .container(
+          Phaser.Math.Between(-200, 1000),
+          Phaser.Math.Between(48, 150),
+        )
+        .setDepth(3);
       const g = this.add.graphics();
       g.fillStyle(0xffffff, 0.75);
       g.fillCircle(-34, 0, 26);
@@ -98,7 +112,14 @@ export default class Puzzle4Scene extends Phaser.Scene {
       if (i < this.slots.length - 1) {
         const arrow = this.add.graphics();
         arrow.fillStyle(0xffffff, 0.6);
-        arrow.fillTriangle(this.slots[i] + 75, 172, this.slots[i] + 96, 161, this.slots[i] + 96, 183);
+        arrow.fillTriangle(
+          this.slots[i] + 75,
+          172,
+          this.slots[i] + 96,
+          161,
+          this.slots[i] + 96,
+          183,
+        );
       }
     }
   }
@@ -128,7 +149,10 @@ export default class Puzzle4Scene extends Phaser.Scene {
     container.setData("rank", rank);
     container.setData("homeX", x);
     container.setData("homeY", y);
-    container.setInteractive(new Phaser.Geom.Circle(0, 0, 85), Phaser.Geom.Circle.Contains);
+    container.setInteractive(
+      new Phaser.Geom.Circle(0, 0, 85),
+      Phaser.Geom.Circle.Contains,
+    );
     this.input.setDraggable(container);
     const tapZone = this.add.zone(x, y, 220, 220).setDepth(35);
     tapZone.setInteractive({ useHandCursor: true });
@@ -161,8 +185,8 @@ export default class Puzzle4Scene extends Phaser.Scene {
     if (this.isCompleting || !piece.input.enabled) {
       return;
     }
-    piece.x = dragX;
-    piece.y = dragY;
+    piece.x = Phaser.Math.Clamp(dragX, 85, 915);
+    piece.y = Phaser.Math.Clamp(dragY, 85, 415);
   }
 
   onDragEnd(piece) {
@@ -170,7 +194,8 @@ export default class Puzzle4Scene extends Phaser.Scene {
       return;
     }
     const targetX = this.slots[this.currentStep];
-    const nearSlot = Phaser.Math.Distance.Between(piece.x, piece.y, targetX, 172) < 130;
+    const nearSlot =
+      Phaser.Math.Distance.Between(piece.x, piece.y, targetX, 172) < 130;
     if (nearSlot && piece.getData("rank") === this.currentStep + 1) {
       this.placePiece(piece);
       return;
@@ -232,7 +257,9 @@ export default class Puzzle4Scene extends Phaser.Scene {
       return;
     }
     const targetRank = this.currentStep + 1;
-    const targetPiece = this.pieces.find((p) => p.getData("rank") === targetRank && p.input && p.input.enabled);
+    const targetPiece = this.pieces.find(
+      (p) => p.getData("rank") === targetRank && p.input && p.input.enabled,
+    );
     if (!targetPiece) {
       return;
     }
@@ -305,12 +332,21 @@ export default class Puzzle4Scene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    const buttonHit = this.add.zone(0, 125, 360, 90).setInteractive({ useHandCursor: true });
+    const buttonHit = this.add
+      .zone(0, 125, 360, 90)
+      .setInteractive({ useHandCursor: true });
     buttonHit.on("pointerdown", () => {
       this.scene.start("PuzzleSolarScene");
     });
 
-    this.finalLayer.add([panel, title, subtitle, buttonBg, buttonLabel, buttonHit]);
+    this.finalLayer.add([
+      panel,
+      title,
+      subtitle,
+      buttonBg,
+      buttonLabel,
+      buttonHit,
+    ]);
     this.tweens.add({
       targets: this.finalLayer,
       scaleX: { from: 0.85, to: 1 },

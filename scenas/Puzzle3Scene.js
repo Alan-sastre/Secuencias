@@ -118,8 +118,8 @@ export default class Puzzle3Scene extends Phaser.Scene {
     if (this.isCompleting) {
       return;
     }
-    option.x = dragX;
-    option.y = dragY;
+    option.x = Phaser.Math.Clamp(dragX, 54, 946);
+    option.y = Phaser.Math.Clamp(dragY, 54, 446);
   }
 
   onDragEnd(option) {

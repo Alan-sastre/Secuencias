@@ -22,9 +22,15 @@ export default class Puzzle2Scene extends Phaser.Scene {
       .text(0, 0, "👆🏻", { fontSize: "60px" })
       .setOrigin(0.5)
       .setDepth(20);
-    this.input.on("dragstart", (pointer, gameObject) => this.onDragStart(gameObject));
-    this.input.on("drag", (pointer, gameObject, dragX, dragY) => this.onDrag(gameObject, dragX, dragY));
-    this.input.on("dragend", (pointer, gameObject) => this.onDragEnd(gameObject));
+    this.input.on("dragstart", (pointer, gameObject) =>
+      this.onDragStart(gameObject),
+    );
+    this.input.on("drag", (pointer, gameObject, dragX, dragY) =>
+      this.onDrag(gameObject, dragX, dragY),
+    );
+    this.input.on("dragend", (pointer, gameObject) =>
+      this.onDragEnd(gameObject),
+    );
     this.updateHelp();
   }
 
@@ -57,7 +63,13 @@ export default class Puzzle2Scene extends Phaser.Scene {
       slot.strokeRoundedRect(slots[i] - 58, 130, 116, 116, 20);
 
       if (i < this.pattern.length - 1) {
-        const item = this.createAnimal(slots[i], 192, this.pattern[i], false, 0.62);
+        const item = this.createAnimal(
+          slots[i],
+          192,
+          this.pattern[i],
+          false,
+          0.62,
+        );
         item.setDepth(12);
       } else {
         const mark = this.add.graphics().setDepth(12);
@@ -87,7 +99,9 @@ export default class Puzzle2Scene extends Phaser.Scene {
   }
 
   createDropZone() {
-    this.dropZone = this.add.zone(this.dropTarget.x, this.dropTarget.y, 220, 220).setDepth(5);
+    this.dropZone = this.add
+      .zone(this.dropTarget.x, this.dropTarget.y, 220, 220)
+      .setDepth(5);
   }
 
   createAnimal(x, y, type, interactive, scale = 1) {
@@ -119,7 +133,10 @@ export default class Puzzle2Scene extends Phaser.Scene {
 
     container.setData("type", type);
     if (interactive) {
-      container.setInteractive(new Phaser.Geom.Circle(0, -8, 90), Phaser.Geom.Circle.Contains);
+      container.setInteractive(
+        new Phaser.Geom.Circle(0, -8, 90),
+        Phaser.Geom.Circle.Contains,
+      );
       this.input.setDraggable(container);
     }
     return container;
@@ -187,8 +204,8 @@ export default class Puzzle2Scene extends Phaser.Scene {
     if (this.isCompleting) {
       return;
     }
-    option.x = dragX;
-    option.y = dragY;
+    option.x = Phaser.Math.Clamp(dragX, 92, 908);
+    option.y = Phaser.Math.Clamp(dragY, 78, 430);
   }
 
   onDragEnd(option) {
@@ -198,7 +215,12 @@ export default class Puzzle2Scene extends Phaser.Scene {
     const selected = option.getData("type");
     const expected = this.pattern[this.pattern.length - 1];
     const isNearHole =
-      Phaser.Math.Distance.Between(option.x, option.y, this.dropTarget.x, this.dropTarget.y) < 130;
+      Phaser.Math.Distance.Between(
+        option.x,
+        option.y,
+        this.dropTarget.x,
+        this.dropTarget.y,
+      ) < 130;
 
     if (selected === expected && isNearHole) {
       this.isCompleting = true;
