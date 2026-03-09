@@ -31,3 +31,6 @@ const refreshScale = () => {
 
 window.addEventListener("resize", refreshScale);
 window.addEventListener("orientationchange", refreshScale);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", refreshScale);
+}
